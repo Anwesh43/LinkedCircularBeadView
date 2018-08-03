@@ -57,7 +57,7 @@ class CircularBeadView (ctx : Context) : View(ctx) {
         return true
     }
 
-    data class State(var scale : Float, var prevScale : Float = 0f, var dir : Float = 0f) {
+    data class State(var scale : Float = 0f, var prevScale : Float = 0f, var dir : Float = 0f) {
 
         fun update(cb : (Float) -> Unit) {
             scale += 0.1f * dir
@@ -105,4 +105,50 @@ class CircularBeadView (ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class CBNode(var i : Int, val state : State = State()) {
+
+        private var next : CBNode? = null
+
+        private var prev : CBNode? = null
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawBeadNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = CBNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, state.scale)
+            }
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : CBNode {
+            var curr : CBNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+    }
+
 }
