@@ -15,16 +15,16 @@ import android.util.Log
 
 val nodes : Int = 6
 
-val color : Int = Color.parseColor("#CCE729")
+val color : Int = Color.parseColor("#4CAF50")
 
 fun Canvas.drawBeadNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val l : Float = 3 * Math.min(w, h) / 8
-    val r : Float = (2 * Math.PI.toFloat()) / (2.2f * nodes)
+    val r : Float = (2 * Math.PI.toFloat() * l) / (2.2f * nodes * 5)
     val deg : Float = 360f / nodes
-    val sc1 : Float = Math.min(0.5f, scale)
-    val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f))
+    val sc1 : Float = Math.min(0.5f, scale) * 2
+    val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
     paint.color = color
     save()
     translate(w / 2, h / 2)
@@ -32,6 +32,7 @@ fun Canvas.drawBeadNode(i : Int, scale : Float, paint : Paint) {
     paint.style = Paint.Style.STROKE
     paint.strokeWidth = Math.min(w, h) / 60
     paint.strokeCap = Paint.Cap.ROUND
+    drawCircle(0f, 0f, l, paint)
     restore()
     rotate(deg * i)
     save()
