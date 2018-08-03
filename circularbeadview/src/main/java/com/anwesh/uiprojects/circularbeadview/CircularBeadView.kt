@@ -10,6 +10,7 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Canvas
 import android.graphics.Color
+import android.util.Log
 
 val nodes : Int = 6
 
@@ -172,6 +173,31 @@ class CircularBeadView (ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : CircularBeadView) {
+
+        private val animator : Animator = Animator(view)
+
+        private val lcb : LinkedCircularBead = LinkedCircularBead(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            lcb.draw(canvas, paint)
+            animator.animate {
+                lcb.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            lcb.startUpdating {
+                animator.start {
+                    Log.d("starting animation at", "" + System.currentTimeMillis())
+                }
+            }
         }
     }
 }
