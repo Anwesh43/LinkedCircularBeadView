@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.circularbeadview
  * Created by anweshmishra on 03/08/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.content.Context
@@ -200,6 +201,14 @@ class CircularBeadView (ctx : Context) : View(ctx) {
                     Log.d("starting animation at", "" + System.currentTimeMillis())
                 }
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : CircularBeadView {
+            val view : CircularBeadView = CircularBeadView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
